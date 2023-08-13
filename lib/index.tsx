@@ -32,7 +32,7 @@ function debugLog(x: unknown) {
 	}
 }
 
-export function Animations({renderers: externalChildren} : {renderers: Array<Renderer>}): React.ReactNode {
+export function Animations({renderers: externalChildren} : {renderers: Array<Renderer>}): JSX.Element {
 
 	const [internalChildren, setInternalChildren] = useState<Array<InternalRenderer>>(externalChildren.map(child => ({ ...child, stage: 'stable', generation: UUID() })))
 
@@ -110,7 +110,9 @@ export function Animations({renderers: externalChildren} : {renderers: Array<Ren
 		})
 	})
 
-	return internalChildren.map(({ stage, render }) => render(stage))
+	return <>
+		{internalChildren.map(({ stage, render }) => render(stage))}
+	</>
 }
 
 class Delays {

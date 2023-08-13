@@ -10,7 +10,7 @@
       "DOM",
       "ES2021"
     ],
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
   },
   "exclude": [
     "dist/**/*"

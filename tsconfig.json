@@ -13,7 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "types": [
-      "@testing-library/jest-dom"
+      "@testing-library/jest-dom",
     ]
   },
   "include": [
