@@ -88,11 +88,13 @@ The `AnimationStage` type is passed to animated components so they can choose ho
 
 The `mount` animation stage occurs when the component has just been added to the DOM.
 
-Typically during the `mount` stage, you render the component as the start of its adding animation.
+Typically during the `mount` stage, you render the component at the start of its adding animation.
 
 ### `add`
 
 The `add` stage occurs while the adding animation for the component is executing.
+
+During the `add` stage, you'd typically initiate your adding animation. Often, you are transitioning to the `stable` state. Ensure that the renderer's `duration('add')` is the same as your `transition` length during this phase. Otherwise, the component may be transitioned to `stable` prematurely.
 
 ### `stable`
 
@@ -102,11 +104,17 @@ Components might spend most of their lifetime in `stable`.
 
 The `stable` stage my be skipped if the component is removed before the `add` animation is completed.
 
+You may still want a `transition` during your `stable` state, especially if your component needs to animate in ways that don't involve its adding or removing. (For example, if its position might change.)
+
 ### `remove`
 
 The `remove` stage occurs while the removal animation is executing.
 
 After the `remove` stage completes, the component is removed from the DOM.
+
+You'll typically want to animate towards the component's final state during this phase.
+
+Ensure that the renderer's `duration('remove')` is the same as your `transition` length during this phase. Otherwise, the component may be remove prematurely.
 
 ### Typical Lifecycle:
 
