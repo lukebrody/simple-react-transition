@@ -34,9 +34,13 @@ function debugLog(x: unknown) {
 
 export function Animations({renderers: externalChildren} : {renderers: Array<Renderer>}): JSX.Element {
 
+	debugLog('\n\n')
+
 	const [internalChildren, setInternalChildren] = useState<Array<InternalRenderer>>(externalChildren.map(child => ({ ...child, stage: 'stable', generation: UUID() })))
 
 	const patches = getPatch(internalChildren, externalChildren, (a, b) => a.key === b.key)
+
+	debugLog(patches)
 
 	let internalIndex = 0
 	let patchIndex = 0
@@ -62,21 +66,25 @@ export function Animations({renderers: externalChildren} : {renderers: Array<Ren
 					delays.add(child.duration('remove'), child.generation, 'remove')
 				})
 				internalIndex += patch.items.length
+				patchIndex += patch.items.length
 			}
-		}
-		if (internalIndex < internalChildren.length && externalIndex < externalChildren.length) {
-			// Items that have the same key and are still in the requested children
-			internalChildren[internalIndex].render = externalChildren[externalIndex].render
-			if (internalChildren[internalIndex].stage === 'remove') {
-				internalChildren[internalIndex].generation = UUID()
-				delays.add(0, internalChildren[internalIndex].generation, 'mount')
-				delays.add(internalChildren[internalIndex].duration('add'), internalChildren[internalIndex].generation, 'add')
-				internalChildren[internalIndex].stage = 'mount'
+		} else {
+			if (internalIndex < internalChildren.length && externalIndex < externalChildren.length) {
+				console.assert(internalChildren[internalIndex].key === externalChildren[externalIndex].key)
+				// Items that have the same key and are still in the requested children
+				debugLog({internalIndex, externalIndex})
+				internalChildren[internalIndex].render = externalChildren[externalIndex].render
+				if (internalChildren[internalIndex].stage === 'remove') {
+					internalChildren[internalIndex].generation = UUID()
+					delays.add(0, internalChildren[internalIndex].generation, 'mount')
+					delays.add(internalChildren[internalIndex].duration('add'), internalChildren[internalIndex].generation, 'add')
+					internalChildren[internalIndex].stage = 'mount'
+				}
 			}
+			internalIndex++
+			patchIndex++
+			externalIndex++
 		}
-		internalIndex++
-		patchIndex++
-		externalIndex++
 	}
 
 	delays.execute(ids => {
@@ -111,8 +119,15 @@ export function Animations({renderers: externalChildren} : {renderers: Array<Ren
 		})
 	})
 
+	const rendered = internalChildren.map(({ stage, render }) => render(stage))
+
+	debugLog({
+		internalKeys: internalChildren.map(({key}) => key),
+		renderedKeys: rendered.map(a => (a as {key: string}).key)
+	})
+
 	return <>
-		{internalChildren.map(({ stage, render }) => render(stage))}
+		{rendered}
 	</>
 }
 

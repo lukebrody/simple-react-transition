@@ -10,7 +10,7 @@ test('add remove', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='1'>{stage}</div>
 		}
 	]
 
@@ -22,7 +22,7 @@ test('add remove', async () => {
 		{
 			key: '2',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='2'>{stage}</div>
 		}
 	])
 
@@ -59,7 +59,7 @@ test('swap', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='1'>{stage}</div>
 		}
 	]
 
@@ -77,7 +77,7 @@ test('swap', async () => {
 		{
 			key: '2',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='2'>{stage}</div>
 		}
 	]
 
@@ -109,7 +109,7 @@ test('remove during add', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='1'>{stage}</div>
 		}
 	]
 
@@ -139,7 +139,7 @@ test('add during remove', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='1'>{stage}</div>
 		}
 	]
 
@@ -156,7 +156,7 @@ test('add during remove', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}2</div>
+			render: stage => <div key='1'>{stage}2</div>
 		}
 	]
 
@@ -181,22 +181,22 @@ test('many removals', () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='1'>{stage}</div>
 		},
 		{
 			key: '2',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='2'>{stage}</div>
 		},
 		{
 			key: '3',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='3'>{stage}</div>
 		},
 		{
 			key: '4',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='4'>{stage}</div>
 		},
 	]
 
@@ -206,12 +206,129 @@ test('many removals', () => {
 		{
 			key: '2',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='2'>{stage}</div>
 		},
 		{
 			key: '3',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div key='3'>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
+})
+
+test('replace first', () => {
+	let renderers: Renderer[] = [
+		{
+			key: '1',
+			duration: () => 100,
+			render: stage => <div key='1'>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
+		},
+	]
+
+	const { rerender } = render(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '3',
+			duration: () => 100,
+			render: stage => <div key='3'>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
+})
+
+test('replace then add two', () => {
+	let renderers: Renderer[] = [
+		{
+			key: '1',
+			duration: () => 100,
+			render: stage => <div key='1'>{stage}</div>
+		},
+	]
+
+	const { rerender } = render(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '0',
+			duration: () => 100,
+			render: stage => <div key='0'>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
+		},
+		{
+			key: '3',
+			duration: () => 100,
+			render: stage => <div key='3'>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
+})
+
+test('add one replace first', () => {
+
+	let renderers: Renderer[] = [
+		{
+			key: 'a',
+			duration: () => 100,
+			render: stage => <div key='a'>{stage}</div>
+		},
+	]
+
+	const { rerender } = render(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '1',
+			duration: () => 100,
+			render: stage => <div key='1'>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '3',
+			duration: () => 100,
+			render: stage => <div key='3'>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div key='2'>{stage}</div>
 		},
 	]
 
