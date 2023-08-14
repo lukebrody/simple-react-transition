@@ -38,11 +38,11 @@ export function Animations({renderers: externalChildren} : {renderers: Array<Ren
 
 	const patches = getPatch(internalChildren, externalChildren, (a, b) => a.key === b.key)
 
-	let i = 0
+	let internalIndex = 0
 	let patchIndex = 0
-	let ni = 0
+	let externalIndex = 0
 	const delays = new Delays()
-	while (i < internalChildren.length || patches.length > 0) {
+	while (internalIndex < internalChildren.length || patches.length > 0) {
 		if (patches[0]?.oldPos === patchIndex) {
 			const patch = patches.shift()!
 			if (patch.type === 'add') {
@@ -52,30 +52,31 @@ export function Animations({renderers: externalChildren} : {renderers: Array<Ren
 					delays.add(child.duration('add'), generation, 'add')
 					return { ...child, stage: 'mount', generation }
 				})
-				internalChildren.splice(i, 0, ...newChildren)
-				i += patch.items.length
-				ni += patch.items.length
+				internalChildren.splice(internalIndex, 0, ...newChildren)
+				internalIndex += patch.items.length
+				externalIndex += patch.items.length
 			}
 			else if (patch.type === 'remove') {
-				internalChildren.slice(i, i + patch.items.length).forEach(child => {
+				internalChildren.slice(internalIndex, internalIndex + patch.items.length).forEach(child => {
 					child.stage = 'remove'
 					delays.add(child.duration('remove'), child.generation, 'remove')
 				})
-				i += patch.items.length
+				internalIndex += patch.items.length
 			}
 		}
-		if (i < internalChildren.length) {
-			internalChildren[i].render = externalChildren[ni].render
-			if (internalChildren[i].stage === 'remove') {
-				internalChildren[i].generation = UUID()
-				delays.add(0, internalChildren[i].generation, 'mount')
-				delays.add(internalChildren[i].duration('add'), internalChildren[i].generation, 'add')
-				internalChildren[i].stage = 'mount'
+		if (internalIndex < internalChildren.length && externalIndex < externalChildren.length) {
+			// Items that have the same key and are still in the requested children
+			internalChildren[internalIndex].render = externalChildren[externalIndex].render
+			if (internalChildren[internalIndex].stage === 'remove') {
+				internalChildren[internalIndex].generation = UUID()
+				delays.add(0, internalChildren[internalIndex].generation, 'mount')
+				delays.add(internalChildren[internalIndex].duration('add'), internalChildren[internalIndex].generation, 'add')
+				internalChildren[internalIndex].stage = 'mount'
 			}
 		}
-		i++
+		internalIndex++
 		patchIndex++
-		ni++
+		externalIndex++
 	}
 
 	delays.execute(ids => {

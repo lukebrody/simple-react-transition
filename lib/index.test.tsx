@@ -156,22 +156,64 @@ test('add during remove', async () => {
 		{
 			key: '1',
 			duration: () => 100,
-			render: stage => <div>{stage}</div>
+			render: stage => <div>{stage}2</div>
 		}
 	]
 
 	rerender(<Animations renderers={renderers} />)
 
-	expect(screen.getByText('mount')).toBeInTheDocument()
+	expect(screen.getByText('mount2')).toBeInTheDocument()
 	expect(container.children.length).toBe(1)
 
 	await new Promise(resolve => setTimeout(resolve, 10))
 
-	expect(screen.getByText('add')).toBeInTheDocument()
+	expect(screen.getByText('add2')).toBeInTheDocument()
 
 
 	await new Promise(resolve => setTimeout(resolve, 110))
 
-	expect(screen.getByText('stable')).toBeInTheDocument()
+	expect(screen.getByText('stable2')).toBeInTheDocument()
 	expect(container.children.length).toBe(1)
+})
+
+test('many removals', () => {
+	let renderers: Renderer[] = [
+		{
+			key: '1',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+		{
+			key: '3',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+		{
+			key: '4',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+	]
+
+	const { rerender } = render(<Animations renderers={renderers} />)
+
+	renderers = [
+		{
+			key: '2',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+		{
+			key: '3',
+			duration: () => 100,
+			render: stage => <div>{stage}</div>
+		},
+	]
+
+	rerender(<Animations renderers={renderers} />)
 })
