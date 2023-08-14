@@ -14,10 +14,15 @@ test('fuzz', async () => {
 		useEffect(() => {
 			const interval = setInterval(() => {
 				setHues((oldHues) => {
-					const newHues = oldHues.filter(() => Math.random() > 0.5)
-					// if (Math.random() > 0.5) {
-					newHues.splice(Math.round(Math.random() * newHues.length), 0, {id: uuid()})
-					// }
+					const newHues = oldHues.filter(() => Math.random() > 0.25)
+					for (let i = 0; i <= newHues.length; i++) {
+						if (Math.random() > 0.25) {
+							newHues.splice(i, 0, {
+								id: uuid(),
+							})
+							i++
+						}
+					}
 					return newHues
 				})
 			}, 1)
@@ -36,5 +41,5 @@ test('fuzz', async () => {
 
 	render(<App/>)
 
-	await new Promise(resolve => setTimeout(resolve, 1000))
+	await new Promise(resolve => setTimeout(resolve, 2000))
 })
