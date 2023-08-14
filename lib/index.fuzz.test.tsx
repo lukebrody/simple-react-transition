@@ -29,7 +29,6 @@ test('fuzz', async () => {
 			return () => clearInterval(interval)
 		}, [])
 	
-		console.log(hues)
 		const renderers: Renderer[] = hues.map(({ id }) => ({
 			key: id,
 			render: () => <div key={id}/>,
