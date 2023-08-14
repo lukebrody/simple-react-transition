@@ -162,3 +162,55 @@ The first time an `Animations` is rendered, its `renderers` are rendered in stag
 
 # Swapping
 
+![dragging a square](image/swap-demo.gif)
+
+When two components are scheduled to be added and removed at the same time, `Animations` will ensure that they do not flicker.
+
+In the above example, the square that's being dragged by the user and the square that is static are two different components.
+
+In the code below, see how `DraggingSquare` and `StaticSquare` transition in and out at the same time.
+
+```typescript
+// Less relevants parts removed with "//..."
+let renderers: Renderer[];
+if (dragPosition !== null) {
+    renderers = [
+        {
+            key: "dragging",
+            render: (stage) => (
+                <DraggingSquare
+                    key="dragging"
+                    stage={stage}
+                    position={dragPosition}
+                />
+            ),
+            duration: (stage) => (stage === "add" ? 250 : 1000)
+        }
+    ];
+} else {
+    renderers = [
+        {
+            key: "not dragging",
+            render: (stage) => <StaticSquare key="not dragging" stage={stage} />,
+            duration: (stage) => (stage === "add" ? 1000 : 0)
+        }
+    ];
+}
+
+function StaticSquare({ stage }: { stage: AnimationStage }) {
+    let opacity = stage === "stable" ? 1 : 0;
+
+    const style = {
+        //...
+        opacity
+    };
+
+    return <div style={style} />;
+}
+```
+
+The first swap occurs when dragging starts and `DraggingSquare` appears immediately, and `StaticSquare` disappears immediately.
+
+The second swap occurs when dragging ends and `DraggingSquare` begins its 250ms removal animation. Meanwhile, `StaticSquare` begins its 250ms adding animation. `StaticSquare` gains back its opacity when it becomes `stable` at the end of its adding animation. At the same time, `DraggingSquare` is removed.
+
+See the full code: https://codesandbox.io/s/swap-demo-6h37h5
