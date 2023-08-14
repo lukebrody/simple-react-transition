@@ -10,13 +10,13 @@ npm install simple-react-transition
 
 ## Simple Demo
 
-![moving color bars](image/simple-demo.gif)
+![moving color bars](https://github.com/lukebrody/simple-react-transition/raw/main/image/simple-demo.gif)
 
 ### Check out the code: https://codesandbox.io/s/simple-demo-s6vg5f
 
 ## Advanced Demo
 
-![multiple lists animation](image/advanced-demo.gif)
+![multiple lists animation](https://github.com/lukebrody/simple-react-transition/raw/main/image/advanced-demo.gif)
 
 ### Check out the code: https://codesandbox.io/s/advanced-demo-w8dq4x
 
@@ -68,7 +68,7 @@ export default function App() {
   );
 }
 ```
-![toggling on and off the greeting](image/basic-demo.gif)
+![toggling on and off the greeting](https://github.com/lukebrody/simple-react-transition/raw/main/image/basic-demo.gif)
 
 Code: https://codesandbox.io/s/basic-demo-7j9dwg
 
@@ -162,7 +162,7 @@ The first time an `Animations` is rendered, its `renderers` are rendered in stag
 
 # Swapping
 
-![dragging a square](image/swap-demo.gif)
+![dragging a square](https://github.com/lukebrody/simple-react-transition/raw/main/image/swap-demo.gif)
 
 When two components are scheduled to be added and removed at the same time, `Animations` will ensure that they do not flicker.
 
